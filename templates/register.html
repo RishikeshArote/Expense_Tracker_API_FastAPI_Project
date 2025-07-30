@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/register.css') }}">
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Register Form</h2>
+
+        <form action="/register" method="POST">
+            {% if error %}
+            <div class="error-message">
+                {{ error }} <a href="/">Go to Login</a>
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label>Name:</label><br>
+                <input type="text" name="name" value="{{ name | default('') }}" required><br><br>
+                <label>Email:</label><br>
+                <input type="email" name="email" value="{{ email | default('') }}" required><br><br>
+                <label>Password:</label><br>
+                <input type="password" name="password" required><br><br>
+                <label>Confirm Password:</label><br>
+                <input type="password" name="confirm_password" required><br><br>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const errorBox = document.querySelector('.error-message');
+            if (errorBox) { setTimeout(() => { errorBox.style.display = 'none';}, 5000)};}
+    </script>
+
+</body>
+</html>
