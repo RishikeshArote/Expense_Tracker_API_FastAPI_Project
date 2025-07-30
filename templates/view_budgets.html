@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Budgets</h2>
+
+    <!-- Month Filter Dropdown -->
+    <div class="mb-3">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <select class="form-select" name="month_filter" onchange="this.form.submit()">
+                    <option value="">All Months</option>
+                    {% for month in months %}
+                    <option value="{{ month }}" {% if month==selected_month %}selected{% endif %}>{{ month }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <!-- Budget Cards -->
+    <div class="row">
+        {% for data in budget_data %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <!-- Month Name -->
+                    <h5 class="card-title">{{ data.budget.month }}</h5>
+
+                    <!-- Budget Summary -->
+                    <div class="budget-summary mb-3 p-3 bg-light rounded">
+                        <p class="mb-1"><strong>Budget:</strong> ₹{{ "%.2f"|format(data.budget.amount) }}</p>
+                        <p class="mb-1"><strong>Total Expenses:</strong> ₹{{ "%.2f"|format(data.total_expenses) }}</p>
+                        <p class="mb-1">
+                            <strong>Status:</strong>
+                            {% if data.difference >= 0 %}
+                            <span class="text-success"> ₹{{ "%.2f"|format(data.difference) }} remaining</span>
+                            {% else %}
+                            <span class="text-danger">  ₹{{ "%.2f"|format(-data.difference) }} over budget</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Category Breakdown -->
+                    <div class="category-breakdown">
+                        <h6>Expenses by Category:</h6>
+                        <ul class="list-group list-group-flush">
+                            {% for category in categories %}
+                            {% if data.category_expenses[category] > 0 %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ category }}
+                                <span class="badge bg-primary rounded-pill">
+                                    ₹{{ "%.2f"|format(data.category_expenses[category]) }}
+                                </span>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">No budgets found. Add a budget to get started.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

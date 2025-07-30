@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add Expense</h2>
+    <form method="post" action="/add-expense">
+        <div class="mb-3">
+            <label for="month" class="form-label">Month</label>
+            <select class="form-select" id="month" name="month" required>
+                <option value="" selected disabled>Select Month</option>
+                {% for month in months %}
+                    <option value="{{ month }}">{{ month }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0" required>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="" selected disabled>Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Add Expense</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const monthSelect = document.getElementById('month');
+    const dateInput = document.getElementById('date');
+    
+    monthSelect.addEventListener('change', function() {
+        if (this.value) {
+            const monthNumber = new Date(Date.parse(this.value + " 1, 2023")).getMonth() + 1;
+            const year = new Date().getFullYear();
+            const daysInMonth = new Date(year, monthNumber, 0).getDate();
+            
+            dateInput.min = `${year}-${monthNumber.toString().padStart(2, '0')}-01`;
+            dateInput.max = `${year}-${monthNumber.toString().padStart(2, '0')}-${daysInMonth}`;
+        }
+    });
+});
+</script>
+{% endblock %}
