@@ -19,7 +19,7 @@ class Expense(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     amount = Column(Float, nullable=False)
-    category = Column(String(50), nullable=False)  # Fixed categories like a1, b2, etc.
+    category = Column(String(50), nullable=False)  
     date = Column(Date, nullable=False)
     description = Column(String(200), nullable=True)
 
@@ -38,7 +38,7 @@ class Budget(Base):
     # Relationship
     user = relationship("User", back_populates="budgets")
 
-    # Ensure one budget per user per month-year
+   
     __table_args__ = (
         UniqueConstraint("user_id", "month", "year", name="uix_user_month_year"),
     )
